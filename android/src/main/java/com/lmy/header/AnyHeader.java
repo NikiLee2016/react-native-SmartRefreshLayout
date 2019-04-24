@@ -214,18 +214,6 @@ public class AnyHeader extends ReactViewGroup implements RefreshHeader, OnMultiP
 
     @Override
     public void onFooterPulling(RefreshFooter footer, float percent, int offset, int footerHeight, int extendHeight) {
-        /*StringBuffer sb = new StringBuffer("onFooterPulling: percent: ")
-                .append(percent + ", ")
-                .append("offset: ")
-                .append(offset)
-                .append(", ")
-                .append("footerHeight: ")
-                .append(footerHeight)
-                .append(", ")
-                .append("extendHeight: ")
-                .append(extendHeight)
-                .append(", ");
-        Log.v(TAG, sb.toString());*/
         if (mHeaderEventListener != null){
             mHeaderEventListener.onFooterMove(offset);
         }

@@ -1,27 +1,27 @@
 package com.lmy.header;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.components.DeferredReleaser;
 import com.lmy.smartrefreshlayout.R;
+import com.scwang.smartrefresh.header.internal.pathview.PathsView;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshKernel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.internal.ProgressDrawable;
-import com.scwang.smartrefresh.layout.internal.pathview.PathsView;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 /**
@@ -30,7 +30,7 @@ import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 public class DefaultHeader extends RelativeLayout implements RefreshHeader {
     private TextView mHeaderText;//标题文本
-    private PathsView mArrowView;//下拉箭头
+    private View mArrowView;//下拉箭头
     private ImageView mProgressView;//刷新动画视图
     private ProgressDrawable mProgressDrawable;//刷新动画
     protected RefreshKernel mRefreshKernel;
@@ -52,19 +52,32 @@ public class DefaultHeader extends RelativeLayout implements RefreshHeader {
         this.initView(context);
     }
 
+    private View addArrowView (Context context, RelativeLayout parent){
+        RelativeLayout.LayoutParams rlArrowView = new RelativeLayout.LayoutParams(DensityUtil.dp2px(20),DensityUtil.dp2px(20));
+        if (Build.VERSION.SDK_INT < 28){
+            PathsView arrowView = new PathsView(context);
+            arrowView.setId(R.id.arrow_view);
+            arrowView.parserColors(Color.parseColor("#4e4d4e"));
+            arrowView.parserPaths("M20,12l-1.41,-1.41L13,16.17V4h-2v12.17l-5.58,-5.59L4,12l8,8 8,-8z");
+            parent.addView(arrowView,rlArrowView);
+            return  arrowView;
+        }else {
+            ImageView imageView = new ImageView(context);
+            imageView.setId(R.id.arrow_view);
+            imageView.setImageResource(R.drawable.arrow_view);
+            parent.addView(imageView, rlArrowView);
+            return imageView;
+        }
+
+    }
+
 
     private void initView(Context context) {
         RelativeLayout parent = new RelativeLayout(context);
         RelativeLayout.LayoutParams rlParent = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rlParent.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
 
-
-        RelativeLayout.LayoutParams rlArrowView = new RelativeLayout.LayoutParams(DensityUtil.dp2px(20),DensityUtil.dp2px(20));
-        mArrowView = new PathsView(context);
-        mArrowView.setId(R.id.arrow_view);
-        mArrowView.parserColors(0xff666666);
-        mArrowView.parserPaths("M20,12l-1.41,-1.41L13,16.17V4h-2v12.17l-5.58,-5.59L4,12l8,8 8,-8z");
-        parent.addView(mArrowView,rlArrowView);
+        mArrowView = addArrowView(context, parent);
 
 
         RelativeLayout.LayoutParams rlHeaderText= new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -179,9 +192,11 @@ public class DefaultHeader extends RelativeLayout implements RefreshHeader {
     }
     public DefaultHeader setAccentColor(int accentColor){
         mAccentColor=accentColor;
+        /*
         if(mArrowView!=null){
-            mArrowView.parserColors(accentColor);
-        }
+                    mArrowView.parserColors(accentColor);
+                }
+        */
         if(mProgressDrawable!=null) {
             mProgressDrawable.setColor(accentColor);
         }
