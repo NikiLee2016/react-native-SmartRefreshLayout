@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lmy.smartrefreshlayout.R;
-import com.scwang.smartrefresh.header.internal.pathview.PathsView;
+import com.scwang.smartrefresh.layout.internal.pathview.PathsView;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshKernel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
